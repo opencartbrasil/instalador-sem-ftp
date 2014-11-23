@@ -16,9 +16,11 @@ Caso deseje doar um valor para contribuir com este trabalho continuo e sempre gr
 ### Dúvidas
 
 O OCMod (OpenCart Modification) é nativo do OpenCart, ou seja, não é necessário instalar nenhum complemento no OpenCart para utilizar modificações ou extensões no formato OCMod, para mais informações sobre o OCMod, segue o link:
+
 https://github.com/opencart/opencart/wiki/Modification-System
 
 O único arquivo alterado virtualmente através do OCMod é o arquivo abaixo:
+
 admin/controller/extension/installer.php
 
 ### Como contribuir
