@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
   <name>Instalador sem FTP</name>
-  <code>instalador-ftp</code>
+  <code>instalador-sem-ftp</code>
   <version>1.0</version>
   <author>Manoel Vidal</author>
   <link>http://www.opencartbrasil.com.br</link>
