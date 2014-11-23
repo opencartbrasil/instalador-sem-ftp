@@ -22,4 +22,5 @@ Antes de registrar uma Issue, siga os passos abaixo:
 
 ### Licença
 
-[GNU General Public License version 3 (GPLv3)](https://github.com/opencartbrasil/traducao/blob/master/LICENSE)
+[GNU General Public License version 3 (GPLv3)](https://github.com/opencartbrasil/instalador-sem-ftp
+/blob/master/LICENSE)
