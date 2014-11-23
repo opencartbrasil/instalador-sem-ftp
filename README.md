@@ -1,6 +1,9 @@
 ### Resumo
 
-Esta modificação foi desenvolvida no formato XML do OCMod, e incrementa a possibilidade de instalar extensões sem utilizar o FTP do OpenCart, porém, mantém a função FTP funcionando.
+Esta modificação foi desenvolvida no formato OCMod (substituto do VQMod), e incrementa a possibilidade de instalar extensões sem utilizar o FTP no OpenCart, porém, mantém a função FTP funcionando.
+
+O OCMod (OpenCart Modification) é nativo do OpenCart, ou seja, não é necessário instalar nenhum complemento no OpenCart para utilizar modificações ou extensões no formato OCMod, para mais informações sobre o OCMod, segue o link:
+https://github.com/opencart/opencart/wiki/Modification-System
 
 Caso deseje doar um valor para contribuir com este trabalho continuo e sempre gratuito, clique no botão abaixo:
 
