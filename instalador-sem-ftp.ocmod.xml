@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name>Instalador sem FTP</name>
+  <code>instalador-ftp</code>
+  <version>1.0</version>
+  <author>Manoel Vidal</author>
+  <link>http://www.opencartbrasil.com.br</link>
+  <file path="admin/controller/extension/installer.php">
+    <operation>
+      <search>
+	    <![CDATA[public function ftp() {]]>
+      </search>
+      <add position="replace">
+        <![CDATA[public function oldftp() {]]>
+      </add>
+    </operation>
+    <operation>
+      <search>
+	    <![CDATA[public function sql() {]]>
+      </search>
+      <add position="before">
+        <![CDATA[
+	public function ftp() {
+		$this->load->language('extension/installer');
+
+		$json = array();
+
+		if (!$this->user->hasPermission('modify', 'extension/installer')) {
+			$json['error'] = $this->language->get('error_permission');
+		}
+		
+		$directory = DIR_UPLOAD . str_replace(array('../', '..\\', '..'), '', $this->request->post['path']) . '/upload/';
+
+		if (!is_dir($directory)) {
+			$json['error'] = $this->language->get('error_directory');
+		}
+
+		if (!$json) {
+			$files = array();
+
+			$path = array($directory . '*');
+
+			while (count($path) != 0) {
+				$next = array_shift($path);
+
+				foreach (glob($next) as $file) {
+					if (is_dir($file)) {
+						$path[] = $file . '/*';
+					}
+
+					$files[] = $file;
+				}
+			}
+
+			if ($this->config->get('config_ftp_status')) {
+				$connection = ftp_connect($this->config->get('config_ftp_hostname'), $this->config->get('config_ftp_port'));
+
+				if ($connection) {
+					$login = ftp_login($connection, $this->config->get('config_ftp_username'), $this->config->get('config_ftp_password'));
+
+					if ($login) {
+						if ($this->config->get('config_ftp_root')) {
+							$root = ftp_chdir($connection, $this->config->get('config_ftp_root'));
+						} else {
+							$root = ftp_chdir($connection, '/');
+						}
+
+						if ($root) {
+							foreach ($files as $file) {
+								$destination = substr($file, strlen($directory));
+
+								if (is_dir($file)) {
+									$list = ftp_nlist($connection, substr($destination, 0, strrpos($destination, '/')));
+									
+									if (!in_array($destination, $list)) {
+										if (!ftp_mkdir($connection, $destination)) {
+											$json['error'] = sprintf($this->language->get('error_ftp_directory'), $destination);
+										}
+									}
+								}
+
+								if (is_file($file)) {
+									if (!ftp_put($connection, $destination, $file, FTP_BINARY)) {
+										$json['error'] = sprintf($this->language->get('error_ftp_file'), $file);
+									}
+								}
+							}
+						} else {
+							$json['error'] = sprintf($this->language->get('error_ftp_root'), $root);
+						}
+					} else {
+						$json['error'] = sprintf($this->language->get('error_ftp_login'), $this->config->get('config_ftp_username'));
+					}
+
+					ftp_close($connection);
+				} else {
+					$json['error'] = sprintf($this->language->get('error_ftp_connection'), $this->config->get('config_ftp_hostname'), $this->config->get('config_ftp_port'));
+				}
+			} else {
+				foreach ($files as $file) {
+					$destination = substr($file, strlen($directory));
+					$rpatch = str_replace('/catalog', '', DIR_CATALOG) . $destination; 
+					if (is_dir($file)) {
+						if (!file_exists($rpatch)) {
+							mkdir($rpatch, 0755);
+						}
+					}
+
+					if (is_file($file)) {
+						copy($file, $rpatch);
+					}
+				}
+			}
+		}
+
+		$this->response->addHeader('Content-Type: application/json');
+		$this->response->setOutput(json_encode($json));
+	}
+		]]>
+      </add>
+    </operation>
+  </file>
+</modification>
