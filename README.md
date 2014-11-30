@@ -17,6 +17,10 @@ Caso deseje doar um valor para contribuir com este trabalho continuo e sempre gr
  5. Após a instalação, acesse o menu Extensions->Modifications (Extensões->Modificações) e clique no botão Refresh (Atualizar), para que a modificação instalada seja incrementada na loja.
  6. Para desinstalar a modificação, acesse o menu Extensions->Modifications (Extensões->Modificações) e selecione a modificação com o nome 'Instalador sem FTP', e clique no botão Delete (Excluir), depois no botão Refresh (Atualizar).
 
+### Desinstalar
+
+Para desinstalar a modificação, na administração da loja, acesse o menu Extensions->Modifications (Extensões->Modificações) e selecione a modificação com o nome 'Instalador sem FTP', depois clique no botão Delete (Excluir), e no botão Refresh (Atualizar).
+
 ### Dúvidas
 
 O OCMod (OpenCart Modification) é nativo do OpenCart, ou seja, não é necessário instalar nenhum complemento no OpenCart para utilizar modificações ou extensões no formato OCMod, para mais informações sobre o OCMod, segue o link:
