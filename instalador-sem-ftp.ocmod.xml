@@ -2,7 +2,7 @@
 <modification>
   <name>Instalador sem FTP</name>
   <code>instalador-sem-ftp</code>
-  <version>1.1</version>
+  <version>1.2</version>
   <author>Manoel Vidal</author>
   <link>http://www.opencartbrasil.com.br</link>
   <file path="admin/controller/extension/installer.php">
@@ -43,7 +43,7 @@
 			while (count($path) != 0) {
 				$next = array_shift($path);
 
-				foreach (glob($next) as $file) {
+				foreach ((array)glob($next) as $file) {
 					if (is_dir($file)) {
 						$path[] = $file . '/*';
 					}
@@ -67,22 +67,34 @@
 
 						if ($root) {
 							foreach ($files as $file) {
-								if (substr($file, strlen($directory), 5) == 'admin') {
-									$destination = DIR_APPLICATION . '/' . substr($file, strlen($directory . 'admin'));
-								} elseif (substr($file, strlen($directory), 7) == 'catalog'){
-									$destination = DIR_CATALOG . '/' . substr($file, strlen($directory . 'catalog'));
-								} else if(substr($file, strlen($directory),5) == 'image'){
-									$destination = DIR_IMAGE . '/' . substr($file, strlen($directory . 'image'));
-								} else if(substr($file, strlen($directory),6) == 'system'){
-									$destination = DIR_SYSTEM . '/' . substr($file, strlen($directory . 'system'));
-								} else {
-									$destination = $root . substr($file, strlen($directory));
+								$destination = substr($file, strlen($directory));
+
+								if (substr($destination, 0, 5) == 'admin') {
+									$destination = basename(DIR_APPLICATION) . substr($destination, 5);
+								}
+
+								if (substr($destination, 0, 7) == 'catalog') {
+									$destination = basename(DIR_CATALOG) . substr($destination, 7);
+								}
+
+								if (substr($destination, 0, 5) == 'image') {
+									$destination = basename(DIR_IMAGE) . substr($destination, 5);
+								}
+
+								if (substr($destination, 0, 6) == 'system') {
+									$destination = basename(DIR_SYSTEM) . substr($destination, 6);
 								}
 
 								if (is_dir($file)) {
 									$list = ftp_nlist($connection, substr($destination, 0, strrpos($destination, '/')));
-									
-									if (!in_array($destination, $list)) {
+
+									$list_data = array();
+
+									foreach ($list as $list) {
+										$list_data[] = basename($list);
+									}
+
+									if (!in_array(basename($destination), $list_data)) {
 										if (!ftp_mkdir($connection, $destination)) {
 											$json['error'] = sprintf($this->language->get('error_ftp_directory'), $destination);
 										}
@@ -107,17 +119,21 @@
 					$json['error'] = sprintf($this->language->get('error_ftp_connection'), $this->config->get('config_ftp_hostname'), $this->config->get('config_ftp_port'));
 				}
 			} else {
+				$root = dirname(DIR_APPLICATION).'/';
+
 				foreach ($files as $file) {
-					$destination = substr($file, strlen($directory));
-					$rpatch = str_replace('/catalog', '', DIR_CATALOG) . $destination; 
+					$destination = $root.substr($file, strlen($directory));
+
 					if (is_dir($file)) {
-						if (!file_exists($rpatch)) {
-							mkdir($rpatch, 0755);
+						$list = glob(rtrim($destination, '/').'/*');
+
+						if (!file_exists($destination)) {
+							mkdir($destination, 0755);
 						}
 					}
 
 					if (is_file($file)) {
-						copy($file, $rpatch);
+						copy($file, $destination);
 					}
 				}
 			}
