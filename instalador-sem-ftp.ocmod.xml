@@ -3,7 +3,7 @@
   <name>Instalador sem FTP</name>
   <code>instalador-sem-ftp</code>
   <version>1.3</version>
-  <author>Manoel Vidal</author>
+  <author>OpenCart Brasil</author>
   <link>http://www.opencartbrasil.com.br</link>
   <file path="admin/controller/extension/installer.php">
     <operation>
