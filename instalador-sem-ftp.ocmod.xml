@@ -2,168 +2,160 @@
 <modification>
   <name>Instalador sem FTP</name>
   <code>instalador-sem-ftp</code>
-  <version>1.3</version>
+  <version>1.4.0</version>
   <author>OpenCart Brasil</author>
   <link>http://www.opencartbrasil.com.br</link>
   <file path="admin/controller/extension/installer.php">
     <operation>
-      <search>
-	    <![CDATA[public function ftp() {]]>
-      </search>
-      <add position="replace">
-        <![CDATA[public function oldftp() {]]>
-      </add>
+      <search><![CDATA[public function ftp() {]]></search>
+      <add position="replace"><![CDATA[public function old_ftp() {]]></add>
     </operation>
     <operation>
-      <search>
-	    <![CDATA[public function sql() {]]>
-      </search>
-      <add position="before">
-        <![CDATA[
-	public function ftp() {
-		$this->load->language('extension/installer');
+      <search><![CDATA[public function sql() {]]></search>
+      <add position="before"><![CDATA[
+        public function ftp() {
+            $this->load->language('extension/installer');
 
-		$json = array();
+            $json = array();
 
-		if (!$this->user->hasPermission('modify', 'extension/installer')) {
-			$json['error'] = $this->language->get('error_permission');
-		}
-		
-		if (VERSION == '2.0.0.0') {
-		    $directory = DIR_DOWNLOAD  . str_replace(array('../', '..\\', '..'), '', $this->request->post['path']) . '/upload/';
-		} else {
-			$directory = DIR_UPLOAD . str_replace(array('../', '..\\', '..'), '', $this->request->post['path']) . '/upload/';
-		}
+            if (!$this->user->hasPermission('modify', 'extension/installer')) {
+                $json['error'] = $this->language->get('error_permission');
+            }
+            
+            if (VERSION == '2.0.0.0') {
+                $directory = DIR_DOWNLOAD  . str_replace(array('../', '..\\', '..'), '', $this->request->post['path']) . '/upload/';
+            } else {
+                $directory = DIR_UPLOAD . str_replace(array('../', '..\\', '..'), '', $this->request->post['path']) . '/upload/';
+            }
 
-		if (!is_dir($directory)) {
-			$json['error'] = $this->language->get('error_directory');
-		}
+            if (!is_dir($directory)) {
+                $json['error'] = $this->language->get('error_directory');
+            }
 
-		if (!$json) {
-			$files = array();
+            if (!$json) {
+                $files = array();
 
-			$path = array($directory . '*');
+                $path = array($directory . '*');
 
-			while (count($path) != 0) {
-				$next = array_shift($path);
+                while (count($path) != 0) {
+                    $next = array_shift($path);
 
-				foreach ((array)glob($next) as $file) {
-					if (is_dir($file)) {
-						$path[] = $file . '/*';
-					}
+                    foreach ((array)glob($next) as $file) {
+                        if (is_dir($file)) {
+                            $path[] = $file . '/*';
+                        }
 
-					$files[] = $file;
-				}
-			}
+                        $files[] = $file;
+                    }
+                }
 
-			if ($this->config->get('config_ftp_status')) {
-				$connection = ftp_connect($this->config->get('config_ftp_hostname'), $this->config->get('config_ftp_port'));
+                if ($this->config->get('config_ftp_status')) {
+                    $connection = ftp_connect($this->config->get('config_ftp_hostname'), $this->config->get('config_ftp_port'));
 
-				if ($connection) {
-					$login = ftp_login($connection, $this->config->get('config_ftp_username'), $this->config->get('config_ftp_password'));
+                    if ($connection) {
+                        $login = ftp_login($connection, $this->config->get('config_ftp_username'), $this->config->get('config_ftp_password'));
 
-					if ($login) {
-						if ($this->config->get('config_ftp_root')) {
-							$root = ftp_chdir($connection, $this->config->get('config_ftp_root'));
-						} else {
-							$root = ftp_chdir($connection, '/');
-						}
+                        if ($login) {
+                            if ($this->config->get('config_ftp_root')) {
+                                $root = ftp_chdir($connection, $this->config->get('config_ftp_root'));
+                            } else {
+                                $root = ftp_chdir($connection, '/');
+                            }
 
-						ftp_pasv($connection, true);
+                            ftp_pasv($connection, true);
 
-						if ($root) {
-							foreach ($files as $file) {
-								$destination = substr($file, strlen($directory));
+                            if ($root) {
+                                foreach ($files as $file) {
+                                    $destination = substr($file, strlen($directory));
 
-								if (substr($destination, 0, 5) == 'admin') {
-									$destination = basename(DIR_APPLICATION) . substr($destination, 5);
-								}
+                                    if (substr($destination, 0, 5) == 'admin') {
+                                        $destination = basename(DIR_APPLICATION) . substr($destination, 5);
+                                    }
 
-								if (substr($destination, 0, 7) == 'catalog') {
-									$destination = basename(DIR_CATALOG) . substr($destination, 7);
-								}
+                                    if (substr($destination, 0, 7) == 'catalog') {
+                                        $destination = basename(DIR_CATALOG) . substr($destination, 7);
+                                    }
 
-								if (substr($destination, 0, 5) == 'image') {
-									$destination = basename(DIR_IMAGE) . substr($destination, 5);
-								}
+                                    if (substr($destination, 0, 5) == 'image') {
+                                        $destination = basename(DIR_IMAGE) . substr($destination, 5);
+                                    }
 
-								if (substr($destination, 0, 6) == 'system') {
-									$destination = basename(DIR_SYSTEM) . substr($destination, 6);
-								}
+                                    if (substr($destination, 0, 6) == 'system') {
+                                        $destination = basename(DIR_SYSTEM) . substr($destination, 6);
+                                    }
 
-								if (is_dir($file)) {
-									$list = ftp_nlist($connection, substr($destination, 0, strrpos($destination, '/')));
+                                    if (is_dir($file)) {
+                                        $list = ftp_nlist($connection, substr($destination, 0, strrpos($destination, '/')));
 
-									$list_data = array();
+                                        $list_data = array();
 
-									foreach ($list as $list) {
-										$list_data[] = basename($list);
-									}
+                                        foreach ($list as $list) {
+                                            $list_data[] = basename($list);
+                                        }
 
-									if (!in_array(basename($destination), $list_data)) {
-										if (!ftp_mkdir($connection, $destination)) {
-											$json['error'] = sprintf($this->language->get('error_ftp_directory'), $destination);
-										}
-									}
-								}
+                                        if (!in_array(basename($destination), $list_data)) {
+                                            if (!ftp_mkdir($connection, $destination)) {
+                                                $json['error'] = sprintf($this->language->get('error_ftp_directory'), $destination);
+                                            }
+                                        }
+                                    }
 
-								if (is_file($file)) {
-									if (!ftp_put($connection, $destination, $file, FTP_BINARY)) {
-										$json['error'] = sprintf($this->language->get('error_ftp_file'), $file);
-									}
-								}
-							}
-						} else {
-							$json['error'] = sprintf($this->language->get('error_ftp_root'), $root);
-						}
-					} else {
-						$json['error'] = sprintf($this->language->get('error_ftp_login'), $this->config->get('config_ftp_username'));
-					}
+                                    if (is_file($file)) {
+                                        if (!ftp_put($connection, $destination, $file, FTP_BINARY)) {
+                                            $json['error'] = sprintf($this->language->get('error_ftp_file'), $file);
+                                        }
+                                    }
+                                }
+                            } else {
+                                $json['error'] = sprintf($this->language->get('error_ftp_root'), $root);
+                            }
+                        } else {
+                            $json['error'] = sprintf($this->language->get('error_ftp_login'), $this->config->get('config_ftp_username'));
+                        }
 
-					ftp_close($connection);
-				} else {
-					$json['error'] = sprintf($this->language->get('error_ftp_connection'), $this->config->get('config_ftp_hostname'), $this->config->get('config_ftp_port'));
-				}
-			} else {
-				$root = dirname(DIR_APPLICATION) . '/';
+                        ftp_close($connection);
+                    } else {
+                        $json['error'] = sprintf($this->language->get('error_ftp_connection'), $this->config->get('config_ftp_hostname'), $this->config->get('config_ftp_port'));
+                    }
+                } else {
+                    $root = dirname(DIR_APPLICATION) . '/';
 
-				foreach ($files as $file) {
-					$destination = substr($file, strlen($directory));
+                    foreach ($files as $file) {
+                        $destination = substr($file, strlen($directory));
 
-					if (substr($destination, 0, 5) == 'admin') {
-						$destination = DIR_APPLICATION . substr($destination, 5);
-					} else if (substr($destination, 0, 7) == 'catalog') {
-						$destination = DIR_CATALOG . substr($destination, 7);
-					} else if (substr($destination, 0, 5) == 'image') {
-						$destination = DIR_IMAGE . substr($destination, 5);
-					} else if (substr($destination, 0, 6) == 'system') {
-						$destination = DIR_SYSTEM . substr($destination, 6);
-					} else {
-						$destination = $root.$destination;
-					}
+                        if (substr($destination, 0, 5) == 'admin') {
+                            $destination = DIR_APPLICATION . substr($destination, 5);
+                        } else if (substr($destination, 0, 7) == 'catalog') {
+                            $destination = DIR_CATALOG . substr($destination, 7);
+                        } else if (substr($destination, 0, 5) == 'image') {
+                            $destination = DIR_IMAGE . substr($destination, 5);
+                        } else if (substr($destination, 0, 6) == 'system') {
+                            $destination = DIR_SYSTEM . substr($destination, 6);
+                        } else {
+                            $destination = $root.$destination;
+                        }
 
-					if (is_dir($file)) {
-						if (!file_exists($destination)) {
-							if (!mkdir($destination)) {
-								$json['error'] = sprintf($this->language->get('error_ftp_directory'), $destination);
-							}
-						}
-					}
+                        if (is_dir($file)) {
+                            if (!file_exists($destination)) {
+                                if (!mkdir($destination)) {
+                                    $json['error'] = sprintf($this->language->get('error_ftp_directory'), $destination);
+                                }
+                            }
+                        }
 
-					if (is_file($file)) {
-						if (!copy($file, $destination)) {
-							$json['error'] = sprintf($this->language->get('error_ftp_file'), $file);
-						}
-					}
-				}
-			}
-		}
+                        if (is_file($file)) {
+                            if (!copy($file, $destination)) {
+                                $json['error'] = sprintf($this->language->get('error_ftp_file'), $file);
+                            }
+                        }
+                    }
+                }
+            }
 
-		$this->response->addHeader('Content-Type: application/json');
-		$this->response->setOutput(json_encode($json));
-	}
-		]]>
-      </add>
+            $this->response->addHeader('Content-Type: application/json');
+            $this->response->setOutput(json_encode($json));
+        }
+      ]]></add>
     </operation>
   </file>
 </modification>
