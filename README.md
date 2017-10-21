@@ -18,17 +18,17 @@ A partir da versão 3.0.0.0 do OpenCart, esse recurso se tornou nativo, dispensa
 
  1. Baixe a modificação no link: https://github.com/opencartbrasil/instalador-sem-ftp/archive/master.zip
  2. Ao baixar, descompacte o conteúdo do arquivo zip e localize o arquivo "instalador-sem-ftp.ocmod.xml".
- 3. Na administração da loja acesse o menu Extensões→Instalador (Extensions→Installer).
- 4. Na página do instalador, clique no botão Upload e selecione o arquivo 'instalador-sem-ftp.ocmod.xml' (que você baixou deste repositório), e aguarde a conclusão da instalação automática.
- 5. Após a instalação, acesse o menu Extensões→Modificações (Extensions→Modifications) e clique no botão Atualizar (Refresh), para que a modificação instalada seja adicionada na loja, lembrando que não é o botão "Atualizar" do navegador, e sim o botão "Atualizar" na cor azul ao lado do botão laranja e vermelho na tela do próprio OpenCart.
+ 3. Na administração da loja acesse o menu **Extensões→Instalador** (Extensions→Installer).
+ 4. Na página do instalador, clique no botão **Upload**, selecione o arquivo 'instalador-sem-ftp.ocmod.xml', e aguarde a conclusão da instalação automática.
+ 5. Após a instalação, acesse o menu **Extensões→Modificações** (Extensions→Modifications) e clique no botão **Atualizar** (Refresh), para que a modificação seja adicionada na loja, lembrando que não é o botão "Atualizar" do navegador, e sim o botão "Atualizar" na cor azul ao lado do botão laranja e vermelho na tela do próprio OpenCart.
 
 ### Configuração
 
-Acesse a administração da loja e vá no menu Configurações→Lojas (System→Settings), clique no botão Editar (Edit), clique na ba FTP, localize o campo "Ativar FTP?" (Enable FTP), marque a opção "Não" (No), e clique no botão Salvar (Save).
+Acesse a administração da loja e vá no menu **Configurações→Lojas** (System→Settings), clique no botão **Editar** (Edit), clique na ba **FTP**, localize o campo "**Ativar FTP?**" (Enable FTP), marque a opção "**Não**" (No), e clique no botão **Salvar** (Save).
 
 ### Desinstalação
 
-Para desinstalar a modificação, na administração da loja, acesse o menu Extensões→Modificações (Extensions→Modifications) e selecione a modificação com o nome 'Instalador sem FTP', depois clique no botão Excluir (Delete), e no botão Atualizar (Refresh).
+Para desinstalar a modificação, na administração da loja, acesse o menu **Extensões→Modificações** (Extensions→Modifications), selecione a modificação com o nome '**Instalador sem FTP**', clique no botão **Excluir** (Delete), e depois no botão **Atualizar** (Refresh).
 
 ### Atualização
 
@@ -42,7 +42,7 @@ https://github.com/opencart/opencart/wiki/Modification-System
 
 ### O arquivo alterado virtualmente através do OCMOD é:
 
-admin/controller/extension/installer.php
+admin/controller/extension/**installer.php**
 
 [licenca-badge]: https://img.shields.io/badge/licença-GPLv3-blue.svg
 [LICENSE]: ./LICENSE
