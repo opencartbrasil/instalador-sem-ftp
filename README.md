@@ -6,10 +6,6 @@ Esta modificação foi desenvolvida no formato OCMOD (substituto do VQMOD), e ad
 
 Uma das grandes vantagens desta modificação é permitir que, ao montar sua loja em ambiente local (no seu pc ou servidor local), você possa instalar extensões através do Instalador de Extensões do OpenCart, sem a necessidade da utilização do FTP.
 
-Caso deseje doar um valor para contribuir com este trabalho continuo e sempre gratuito, clique no botão abaixo:
-
-[![alt tag](https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7G9TR9PXS6G5J)
-
 #### Importante
 
 A partir da versão 3.0.0.0 do OpenCart, esse recurso se tornou nativo, dispensando a utilização desta modificação.
